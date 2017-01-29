@@ -6,6 +6,7 @@ import datetime
 import argparse as AP
 import Settings as S
 import warnings
+import requests
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -44,26 +45,66 @@ def Main():
     if not RetrievedEvents:
         print('No upcoming events found.')
 
+    EventCounter = 0
+
     for SingleEvent in RetrievedEvents:
+        EventSummary = ''
         EventLocation = ''
         EventDescription = ''
-        
-        EventSummary = SingleEvent['summary']
+        EventStartTime = None
+        EventEndTime = None
+
+        EventCounter += 1
+
+        if 'summary' in SingleEvent:
+            EventSummary = SingleEvent['summary']
 
         if 'location' in SingleEvent:
             EventLocation = SingleEvent['location']
 
         if 'description' in SingleEvent:
             EventDescription = SingleEvent['description']
-            
-        EventStartTime = SingleEvent['start'].get('dateTime', SingleEvent['start'].get('date'))
-        EventEndTime = SingleEvent['end'].get('dateTime', SingleEvent['start'].get('date'))
 
-        print('Summary: ' + EventSummary)
-        print('Location: ' + EventLocation)
-        print('Description: ' + EventDescription)
-        print('Start time: ' + EventStartTime)
-        print('End time: ' + EventEndTime)
+        if 'start' in SingleEvent:
+            EventStartTime = SingleEvent['start'].get('dateTime', SingleEvent['start'].get('date'))
+
+        try:
+            datetime.datetime.strptime(EventStartTime, '%Y-%m-%dT%H:%M:%S' + S.CalendarTimeZone)
+        except ValueError:
+            EventStartTime = EventStartTime + 'T00:00:00' + S.CalendarTimeZone
+
+        if 'end' in SingleEvent:
+            EventEndTime = SingleEvent['end'].get('dateTime', SingleEvent['end'].get('date'))
+
+        try:
+            datetime.datetime.strptime(EventEndTime, '%Y-%m-%dT%H:%M:%S' + S.CalendarTimeZone)
+        except ValueError:
+            EventEndTime = EventEndTime + 'T00:00:00' + S.CalendarTimeZone            
+
+        if S.OpenHABPort.strip() != '':
+            TrimmedHostAndPort = S.OpenHABHostName.strip() + ':' + S.OpenHABPort.strip()
+        else:
+            TrimmedHostAndPort = S.OpenHABHostName.strip()
+
+        if S.OpenHABSSLConnection:
+            URLPrefix = 'https://'
+        else:
+            URLPrefix = 'http://' 
+        
+        CalendarEventSummaryItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Summary'
+        OpenHABResponse = requests.post(CalendarEventSummaryItemURL, data=EventSummary.encode('utf-8'), allow_redirects=True)
+
+        CalendarEventLocationItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Location'
+        OpenHABResponse = requests.post(CalendarEventLocationItemURL, data=EventLocation.encode('utf-8'), allow_redirects=True)
+
+        CalendarEventDescriptionItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Description'
+        OpenHABResponse = requests.post(CalendarEventDescriptionItemURL, data=EventDescription.encode('utf-8'), allow_redirects=True)
+
+        CalendarEventStartTimeItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_StartTime'
+        OpenHABResponse = requests.post(CalendarEventStartTimeItemURL, data=EventStartTime, allow_redirects=True)
+    
+        CalendarEventEndTimeItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_EndTime'
+        OpenHABResponse = requests.post(CalendarEventEndTimeItemURL, data=EventEndTime, allow_redirects=True)
 
 if __name__ == '__main__':
     Main()
