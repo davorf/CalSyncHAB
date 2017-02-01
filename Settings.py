@@ -24,8 +24,4 @@ CalendarClientSecretFile = Settings.get('Calendar', 'ClientSecretFile')
 
 OpenHABHostName = Settings.get('OpenHAB', 'HostName')
 OpenHABPort = Settings.get('OpenHAB', 'Port')
-OpenHABSSLConnection = Settings.getboolean('OpenHAB', 'SSLConnection')
-OpenHABUsername = Settings.get('OpenHAB', 'Username')
-OpenHABPassword = Settings.get('OpenHAB', 'Password')
 OpenHABItemPrefix = Settings.get('OpenHAB', 'ItemPrefix')
-

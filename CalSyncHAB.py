@@ -1,5 +1,3 @@
-#!python3
-
 import httplib2
 import os
 import datetime
@@ -84,29 +82,27 @@ def Main():
         if S.OpenHABPort.strip() != '':
             TrimmedHostAndPort = S.OpenHABHostName.strip() + ':' + S.OpenHABPort.strip()
         else:
-            TrimmedHostAndPort = S.OpenHABHostName.strip()
+            TrimmedHostAndPort = S.OpenHABHostName.strip()        
 
-        if S.OpenHABSSLConnection:
-            URLPrefix = 'https://'
-        else:
-            URLPrefix = 'http://' 
-        
-        CalendarEventSummaryItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Summary'
-        OpenHABResponse = requests.post(CalendarEventSummaryItemURL, data=EventSummary.encode('utf-8'), allow_redirects=True)
+        CalendarEventSummaryItemURL = 'http://' + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Summary'
+        OpenHABResponse = requests.post(CalendarEventSummaryItemURL, data = '', allow_redirects = True)
+        OpenHABResponse = requests.post(CalendarEventSummaryItemURL, data = EventSummary.encode('utf-8'), allow_redirects = True)
 
-        CalendarEventLocationItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Location'
-        OpenHABResponse = requests.post(CalendarEventLocationItemURL, data=EventLocation.encode('utf-8'), allow_redirects=True)
+        CalendarEventLocationItemURL = 'http://' + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Location'
+        OpenHABResponse = requests.post(CalendarEventLocationItemURL, data = '', allow_redirects = True)
+        OpenHABResponse = requests.post(CalendarEventLocationItemURL, data = EventLocation.encode('utf-8'), allow_redirects = True)
 
-        CalendarEventDescriptionItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Description'
-        OpenHABResponse = requests.post(CalendarEventDescriptionItemURL, data=EventDescription.encode('utf-8'), allow_redirects=True)
+        CalendarEventDescriptionItemURL = 'http://' + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Description'
+        OpenHABResponse = requests.post(CalendarEventDescriptionItemURL, data = '', allow_redirects = True)
+        OpenHABResponse = requests.post(CalendarEventDescriptionItemURL, data = EventDescription.encode('utf-8'), allow_redirects = True)
 
-        CalendarEventStartTimeItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_StartTime'
-        OpenHABResponse = requests.post(CalendarEventStartTimeItemURL, data=EventStartTime, allow_redirects=True)
+        CalendarEventStartTimeItemURL = 'http://' + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_StartTime'
+        OpenHABResponse = requests.post(CalendarEventStartTimeItemURL, data = 'UNDEF', allow_redirects = True)
+        OpenHABResponse = requests.post(CalendarEventStartTimeItemURL, data = EventStartTime, allow_redirects = True)
     
-        CalendarEventEndTimeItemURL = URLPrefix + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_EndTime'
-        OpenHABResponse = requests.post(CalendarEventEndTimeItemURL, data=EventEndTime, allow_redirects=True)
+        CalendarEventEndTimeItemURL = 'http://' + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_EndTime'
+        OpenHABResponse = requests.post(CalendarEventEndTimeItemURL, data = 'UNDEF', allow_redirects = True)
+        OpenHABResponse = requests.post(CalendarEventEndTimeItemURL, data = EventEndTime, allow_redirects = True)
 
 if __name__ == '__main__':
     Main()
-        
-
