@@ -29,7 +29,7 @@ def Main():
     Credentials = GetCredentials()
     HTTPAuthorization = Credentials.authorize(httplib2.Http())
     CalendarService = discovery.build('calendar', 'v3', http = HTTPAuthorization)
-    CurrentTime = datetime.datetime.utcnow().isoformat() + S.CalendarTimeZone
+    CurrentTime = datetime.datetime.utcnow().isoformat() + 'Z'
 
     CalendarEvents = CalendarService.events().list(
         calendarId = S.CalendarId,
