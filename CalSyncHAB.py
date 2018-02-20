@@ -64,10 +64,10 @@ def Main():
         OpenHABResponse = requests.post(CalendarEventDescriptionItemURL, data = '', allow_redirects = True)
         
         CalendarEventStartTimeItemURL = 'http://' + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_StartTime'
-        OpenHABResponse = requests.post(CalendarEventStartTimeItemURL, data = 'UNDEF', allow_redirects = True)
+        OpenHABResponse = requests.post(CalendarEventStartTimeItemURL, data = '1909-12-19T00:00:00.000+0100', allow_redirects = True)
 
         CalendarEventEndTimeItemURL = 'http://' + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_EndTime'
-        OpenHABResponse = requests.post(CalendarEventEndTimeItemURL, data = 'UNDEF', allow_redirects = True)
+        OpenHABResponse = requests.post(CalendarEventEndTimeItemURL, data = '1909-12-19T00:00:00.000+0100', allow_redirects = True)
 
     time.sleep(2)
 
