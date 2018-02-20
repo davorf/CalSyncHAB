@@ -40,16 +40,15 @@ def Main():
         orderBy = 'startTime').execute()
 
     RetrievedEvents = CalendarEvents.get('items', [])
-
     MaxEvents = int(S.CalendarMaxEvents)
+
+    if not RetrievedEvents:
+        print('No upcoming events found.')
 
     if S.OpenHABPort.strip() != '':
         TrimmedHostAndPort = S.OpenHABHostName.strip() + ':' + S.OpenHABPort.strip()
     else:
         TrimmedHostAndPort = S.OpenHABHostName.strip()
-
-    if not RetrievedEvents:
-        print('No upcoming events found.')
         
     EventCounter = 0
 
