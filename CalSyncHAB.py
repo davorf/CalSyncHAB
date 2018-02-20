@@ -41,17 +41,19 @@ def Main():
 
     RetrievedEvents = CalendarEvents.get('items', [])
 
-    if not RetrievedEvents:
-        print('No upcoming events found.')
+    MaxEvents = int(S.CalendarMaxEvents)
 
     if S.OpenHABPort.strip() != '':
         TrimmedHostAndPort = S.OpenHABHostName.strip() + ':' + S.OpenHABPort.strip()
     else:
         TrimmedHostAndPort = S.OpenHABHostName.strip()
 
+    if not RetrievedEvents:
+        print('No upcoming events found.')
+        
     EventCounter = 0
 
-    for SingleEvent in RetrievedEvents:
+    for SingleEvent in range(0, MaxEvents):
         EventCounter += 1
 
         CalendarEventSummaryItemURL = 'http://' + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_Summary'
@@ -68,7 +70,7 @@ def Main():
 
         CalendarEventEndTimeItemURL = 'http://' + TrimmedHostAndPort + '/rest/items/' + S.OpenHABItemPrefix + 'Event' + str(EventCounter) + '_EndTime'
         OpenHABResponse = requests.post(CalendarEventEndTimeItemURL, data = '1909-12-19T00:00:00.000+0100', allow_redirects = True)
-
+        
     time.sleep(2)
 
     EventCounter = 0
